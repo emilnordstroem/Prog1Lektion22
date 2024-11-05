@@ -11,6 +11,8 @@ public class Controller {
     /**
      * Creates a new Company.<br />
      * Requires: hours >= 0.
+     * @param name name of the company
+     * @param hours number of weekly work hours
      */
     public static Company createCompany(String name, int hours) {
         Company company = new Company(name, hours);
@@ -21,8 +23,12 @@ public class Controller {
     /**
      * Deletes the company.<br />
      * Requires: The company has no employees.
+     * @param company The company to delete.
      */
     public static void deleteCompany(Company company) {
+        if (company.hasEmployees()) {
+            return;
+        }
         Storage.removeCompany(company);
     }
 

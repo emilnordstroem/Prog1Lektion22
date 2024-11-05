@@ -36,14 +36,13 @@ public class StartWindow extends Application {
 
         CompanyPane companyPane = new CompanyPane();
         tabCompanies.setContent(companyPane);
-        tabCompanies.setOnSelectionChanged(event -> companyPane.updateControls());
 
         Tab tabEmployees = new Tab("Employees");
         tabPane.getTabs().add(tabEmployees);
 
         EmployeePane employeePane = new EmployeePane();
         tabEmployees.setContent(employeePane);
-        tabEmployees.setOnSelectionChanged(event -> employeePane.updateControls());
+        //tabEmployees.setOnSelectionChanged(event -> employeePane.updateControls());
     }
 
 

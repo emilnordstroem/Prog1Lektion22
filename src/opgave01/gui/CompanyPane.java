@@ -14,10 +14,10 @@ import opgave01.application.model.Employee;
 import java.util.Optional;
 
 public class CompanyPane extends GridPane {
-    private TextField txfName;
-    private TextField txfHours;
-    private TextArea txaEmps;
-    private ListView<Company> lvwCompanies;
+    private TextField nameTextField;
+    private TextField hoursTextField;
+    private TextArea employeesTextArea;
+    private ListView<Company> companyListView;
 
     public CompanyPane() {
         this.setPadding(new Insets(20));
@@ -25,140 +25,128 @@ public class CompanyPane extends GridPane {
         this.setVgap(10);
         this.setGridLinesVisible(false);
 
-        Label lblComp = new Label("Companies");
-        this.add(lblComp, 0, 0);
+        this.add(new Label("Companies"), 0, 0);
 
-        lvwCompanies = new ListView<>();
-        this.add(lvwCompanies, 0, 1, 1, 3);
-        lvwCompanies.setPrefWidth(200);
-        lvwCompanies.setPrefHeight(200);
-        lvwCompanies.getItems().setAll(Controller.getCompanies());
+        companyListView = new ListView<>();
+        this.add(companyListView, 0, 1, 1, 3);
+        companyListView.setPrefWidth(200);
+        companyListView.setPrefHeight(200);
+        companyListView.getItems().setAll(Controller.getCompanies());
 
-        ChangeListener<Company> listener = (ov, oldCompny, newCompany) -> this.selectedCompanyChanged();
-        lvwCompanies.getSelectionModel().selectedItemProperty().addListener(listener);
+        ChangeListener<Company> listener = (ov, oldCompny, newCompany) -> this.selectedCompanyChanged(newCompany);
+        companyListView.getSelectionModel().selectedItemProperty().addListener(listener);
 
         Label lblName = new Label("Name:");
         this.add(lblName, 1, 1);
 
-        txfName = new TextField();
-        this.add(txfName, 2, 1);
-        txfName.setEditable(false);
+        nameTextField = new TextField();
+        this.add(nameTextField, 2, 1);
+        nameTextField.setEditable(false);
 
         Label lblHours = new Label("Weekly Hours:");
         this.add(lblHours, 1, 2);
 
-        txfHours = new TextField();
-        this.add(txfHours, 2, 2);
-        txfHours.setEditable(false);
+        hoursTextField = new TextField();
+        this.add(hoursTextField, 2, 2);
+        hoursTextField.setEditable(false);
 
-        Label lblEmps = new Label("Employees:");
-        this.add(lblEmps, 1, 3);
-        GridPane.setValignment(lblEmps, VPos.BASELINE);
-        lblEmps.setPadding(new Insets(4, 0, 4, 0));
+        Label employeesLabel = new Label("Employees:");
+        this.add(employeesLabel, 1, 3);
+        GridPane.setValignment(employeesLabel, VPos.BASELINE);
+        employeesLabel.setPadding(new Insets(4, 0, 4, 0));
 
-        txaEmps = new TextArea();
-        this.add(txaEmps, 2, 3);
-        txaEmps.setPrefWidth(200);
-        txaEmps.setPrefHeight(100);
-        txaEmps.setEditable(false);
+        employeesTextArea = new TextArea();
+        this.add(employeesTextArea, 2, 3);
+        employeesTextArea.setPrefWidth(200);
+        employeesTextArea.setPrefHeight(100);
+        employeesTextArea.setEditable(false);
 
-        HBox hbxButtons = new HBox(40);
-        this.add(hbxButtons, 0, 4, 3, 1);
-        hbxButtons.setPadding(new Insets(10, 0, 0, 0));
-        hbxButtons.setAlignment(Pos.BASELINE_CENTER);
+        HBox hboxButtons = new HBox(40);
+        this.add(hboxButtons, 0, 4, 3, 1);
+        hboxButtons.setPadding(new Insets(10, 0, 0, 0));
+        hboxButtons.setAlignment(Pos.BASELINE_CENTER);
 
-        Button btnCreate = new Button("Create");
-        hbxButtons.getChildren().add(btnCreate);
-        btnCreate.setOnAction(event -> this.createAction());
+        Button createButton = new Button("Create");
+        hboxButtons.getChildren().add(createButton);
+        createButton.setOnAction(event -> this.createAction());
 
-        Button btnUpdate = new Button("Update");
-        hbxButtons.getChildren().add(btnUpdate);
-        btnUpdate.setOnAction(event -> this.updateAction());
+        Button updateButton = new Button("Update");
+        hboxButtons.getChildren().add(updateButton);
+        updateButton.setOnAction(event -> this.updateAction());
 
-        Button btnDelete = new Button("Delete");
-        hbxButtons.getChildren().add(btnDelete);
-        btnDelete.setOnAction(event -> this.deleteAction());
+        Button deleteButton = new Button("Delete");
+        hboxButtons.getChildren().add(deleteButton);
+        deleteButton.setOnAction(event -> this.deleteAction());
 
-        if (!lvwCompanies.getItems().isEmpty()) {
-            lvwCompanies.getSelectionModel().select(0);
+        if (!companyListView.getItems().isEmpty()) {
+            companyListView.getSelectionModel().select(0);
         }
     }
 
     // -------------------------------------------------------------------------
 
     private void createAction() {
-        CompanyWindow dia = new CompanyWindow("Create Company");
-        dia.showAndWait();
-
+        new CompanyWindow("Create Company").showAndWait();
         // Wait for the modal dialog to close
-
-        lvwCompanies.getItems().setAll(Controller.getCompanies());
-        int index = lvwCompanies.getItems().size() - 1;
-        lvwCompanies.getSelectionModel().select(index);
+        companyListView.getItems().setAll(Controller.getCompanies());
+        int index = companyListView.getItems().size() - 1;
+        companyListView.getSelectionModel().select(index);
     }
 
     private void updateAction() {
-        Company company = lvwCompanies.getSelectionModel().getSelectedItem();
+        Company company = companyListView.getSelectionModel().getSelectedItem();
         if (company != null) {
-
-            CompanyWindow dia = new CompanyWindow("Update Company", company);
-            dia.showAndWait();
-
+            new CompanyWindow("Update Company", company).showAndWait();
             // Wait for the modal dialog to close
-
-            int selectIndex = lvwCompanies.getSelectionModel().getSelectedIndex();
-            lvwCompanies.getItems().setAll(Controller.getCompanies());
-            lvwCompanies.getSelectionModel().select(selectIndex);
+            int selectIndex = companyListView.getSelectionModel().getSelectedIndex();
+            companyListView.getItems().setAll(Controller.getCompanies());
+            companyListView.getSelectionModel().select(selectIndex);
         }
     }
 
     private void deleteAction() {
-        Company company = lvwCompanies.getSelectionModel().getSelectedItem();
+        Company company = companyListView.getSelectionModel().getSelectedItem();
         if (company != null) {
-
-            if (company.employeesCount() == 0) {
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            if (company.hasEmployees()) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Delete Company");
+                alert.setHeaderText("Can't delete a company that has emlpoyees");
+                // wait for the modal dialog to close
+                alert.show();
+            } else {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Delete Company");
                 // alert.setContentText("Are you sure?");
                 alert.setHeaderText("Are you sure?");
                 Optional<ButtonType> result = alert.showAndWait();
                 if ((result.isPresent()) && (result.get() == ButtonType.OK)) {
                     Controller.deleteCompany(company);
-                    lvwCompanies.getItems().setAll(Controller.getCompanies());
-                    this.updateControls();
+                    companyListView.getItems().setAll(Controller.getCompanies());
+                    this.updateControls(companyListView.getSelectionModel().getSelectedItem());
                 }
-
-            } else {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Delete Company");
-                alert.setHeaderText("Can't delete a company that has emlpoyees");
-                // wait for the modal dialog to close
-                alert.show();
             }
         }
     }
 
     // -------------------------------------------------------------------------
 
-    private void selectedCompanyChanged() {
-        this.updateControls();
+    private void selectedCompanyChanged(Company newCompany) {
+        this.updateControls(newCompany);
     }
 
-    public void updateControls() {
-        Company company = lvwCompanies.getSelectionModel().getSelectedItem();
+    public void updateControls(Company company) {
         if (company != null) {
-            txfName.setText(company.getName());
-            txfHours.setText("" + company.getHours());
-            StringBuilder sb = new StringBuilder();
+            nameTextField.setText(company.getName());
+            hoursTextField.setText("" + company.getHours());
+            StringBuilder stringBuilder = new StringBuilder();
             for (Employee emp : company.getEmployees()) {
-                sb.append(emp + "\n");
+                stringBuilder.append(emp + "\n");
             }
-            txaEmps.setText(sb.toString());
+            employeesTextArea.setText(stringBuilder.toString());
         } else {
-            txfName.clear();
-            txfHours.clear();
-            txaEmps.clear();
+            nameTextField.clear();
+            hoursTextField.clear();
+            employeesTextArea.clear();
         }
     }
-
 }

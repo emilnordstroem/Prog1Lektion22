@@ -9,6 +9,11 @@ public class Company {
     // link to Employee class (--> 0..*)
     private final ArrayList<Employee> employees = new ArrayList<>();
 
+    /**
+     *
+     * @param name name of the company
+     * @param hours number of weekly work hours
+     */
     public Company(String name, int hours) {
         this.name = name;
         this.hours = hours;
@@ -70,8 +75,8 @@ public class Company {
     /**
      * Returns the count of employees in this company.
      */
-    public int employeesCount() {
-        return employees.size();
+    public boolean hasEmployees() {
+        return !employees.isEmpty();
     }
 
     /**

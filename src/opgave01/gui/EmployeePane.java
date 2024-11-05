@@ -13,11 +13,11 @@ import opgave01.application.model.Employee;
 import java.util.Optional;
 
 public class EmployeePane extends GridPane {
-    private TextField txfName;
-    private TextField txfWage;
-    private TextField txfCompany;
-    private TextField txfSalary;
-    private ListView<Employee> lvwEmployees;
+    private TextField nameTextField;
+    private TextField wageTextField;
+    private TextField companyTextField;
+    private TextField salaryTextField;
+    private ListView<Employee> employeesListView;
 
     public EmployeePane() {
         this.setPadding(new Insets(20));
@@ -25,139 +25,128 @@ public class EmployeePane extends GridPane {
         this.setVgap(10);
         this.setGridLinesVisible(false);
 
-        Label lblComp = new Label("Employees");
-        this.add(lblComp, 0, 0);
+        this.add(new Label("Employees"), 0, 0);
 
-        lvwEmployees = new ListView<>();
-        this.add(lvwEmployees, 0, 1, 1, 5);
-        lvwEmployees.setPrefWidth(200);
-        lvwEmployees.setPrefHeight(200);
-        lvwEmployees.getItems().setAll(Controller.getEmployees());
-        ChangeListener<Employee> listener = (ov, oldEmployee, newEmployee) -> this.selectedEmployeeChanged();
-        lvwEmployees.getSelectionModel().selectedItemProperty().addListener(listener);
+        employeesListView = new ListView<>();
+        this.add(employeesListView, 0, 1, 1, 5);
+        employeesListView.setPrefWidth(200);
+        employeesListView.setPrefHeight(200);
+        employeesListView.getItems().setAll(Controller.getEmployees());
+        ChangeListener<Employee> listener = (ov, oldEmployee, newEmployee) -> this.selectedEmployeeChanged(newEmployee);
+        employeesListView.getSelectionModel().selectedItemProperty().addListener(listener);
 
-        Label lblName = new Label("Name:");
-        this.add(lblName, 1, 1);
+        this.add(new Label("Name:"), 1, 1);
 
-        txfName = new TextField();
-        this.add(txfName, 2, 1);
-        txfName.setPrefWidth(200);
-        txfName.setEditable(false);
+        nameTextField = new TextField();
+        this.add(nameTextField, 2, 1);
+        nameTextField.setPrefWidth(200);
+        nameTextField.setEditable(false);
 
-        Label lblWage = new Label("Hourly Wage:");
-        this.add(lblWage, 1, 2);
+        this.add(new Label("Hourly Wage:"), 1, 2);
 
-        txfWage = new TextField();
-        this.add(txfWage, 2, 2);
-        txfWage.setEditable(false);
+        wageTextField = new TextField();
+        this.add(wageTextField, 2, 2);
+        wageTextField.setEditable(false);
 
-        Label lblCompany = new Label("Company:");
-        this.add(lblCompany, 1, 3);
+        this.add(new Label("Company:"), 1, 3);
 
-        txfCompany = new TextField();
-        this.add(txfCompany, 2, 3);
-        txfCompany.setEditable(false);
+        companyTextField = new TextField();
+        this.add(companyTextField, 2, 3);
+        companyTextField.setEditable(false);
 
-        Label lblSalary = new Label("Weekly Salary:");
-        this.add(lblSalary, 1, 4);
+        this.add(new Label("Weekly Salary:"), 1, 4);
 
-        txfSalary = new TextField();
-        this.add(txfSalary, 2, 4);
-        txfSalary.setEditable(false);
+        salaryTextField = new TextField();
+        this.add(salaryTextField, 2, 4);
+        salaryTextField.setEditable(false);
 
-        HBox hbxButtons = new HBox(40);
-        this.add(hbxButtons, 0, 6, 3, 1);
-        hbxButtons.setPadding(new Insets(10, 0, 0, 0));
-        hbxButtons.setAlignment(Pos.BASELINE_CENTER);
+        HBox hboxButtons = new HBox(40);
+        this.add(hboxButtons, 0, 6, 3, 1);
+        hboxButtons.setPadding(new Insets(10, 0, 0, 0));
+        hboxButtons.setAlignment(Pos.BASELINE_CENTER);
 
-        Button btnCreate = new Button("Create");
-        hbxButtons.getChildren().add(btnCreate);
-        btnCreate.setOnAction(event -> this.createAction());
+        Button createButton = new Button("Create");
+        hboxButtons.getChildren().add(createButton);
+        createButton.setOnAction(event -> this.createAction());
 
-        Button btnUpdate = new Button("Update");
-        hbxButtons.getChildren().add(btnUpdate);
-        btnUpdate.setOnAction(event -> this.updateAction());
+        Button updateButton = new Button("Update");
+        hboxButtons.getChildren().add(updateButton);
+        updateButton.setOnAction(event -> this.updateAction());
 
-        Button btnDelete = new Button("Delete");
-        hbxButtons.getChildren().add(btnDelete);
-        btnDelete.setOnAction(event -> this.deleteAction());
+        Button deleteButton = new Button("Delete");
+        hboxButtons.getChildren().add(deleteButton);
+        deleteButton.setOnAction(event -> this.deleteAction());
 
-        if (!lvwEmployees.getItems().isEmpty()) {
-            lvwEmployees.getSelectionModel().select(0);
+        if (!employeesListView.getItems().isEmpty()) {
+            employeesListView.getSelectionModel().select(0);
         }
     }
 
     // -------------------------------------------------------------------------
 
     private void createAction() {
-        EmployeeWindow dia = new EmployeeWindow("Create Employee");
-        dia.showAndWait();
-
+        new EmployeeWindow("Create Employee").showAndWait();
         // Wait for the modal dialog to close
-
-        lvwEmployees.getItems().setAll(Controller.getEmployees());
-        this.updateControls();
+        employeesListView.getItems().setAll(Controller.getEmployees());
+        this.updateControls(employeesListView.getSelectionModel().getSelectedItem());
     }
 
     private void updateAction() {
-        Employee employee = lvwEmployees.getSelectionModel().getSelectedItem();
+        Employee employee = employeesListView
+                .getSelectionModel()
+                .getSelectedItem();
         if (employee != null) {
-
-            EmployeeWindow dia = new EmployeeWindow("Update Employee", employee);
-            dia.showAndWait();
-
+            new EmployeeWindow("Update Employee", employee).showAndWait();
             // Wait for the modal dialog to close
-
-            int selectIndex = lvwEmployees.getSelectionModel().getSelectedIndex();
-            lvwEmployees.getItems().setAll(Controller.getEmployees());
-            lvwEmployees.getSelectionModel().select(selectIndex);
+            employeesListView
+                    .getItems()
+                    .setAll(Controller.getEmployees());
+            employeesListView
+                    .getSelectionModel()
+                    .select(employeesListView
+                            .getSelectionModel()
+                            .getSelectedIndex()
+                    );
         }
     }
 
     private void deleteAction() {
-        Employee employee = lvwEmployees.getSelectionModel().getSelectedItem();
+        Employee employee = employeesListView.getSelectionModel().getSelectedItem();
         if (employee != null) {
-
             Alert alert = new Alert(AlertType.CONFIRMATION);
             alert.setTitle("Delete Employee");
             // alert.setContentText("Are you sure?");
             alert.setHeaderText("Are you sure?");
             Optional<ButtonType> result = alert.showAndWait();
-
             // Wait for the modal dialog to close
-
             if ((result.isPresent()) && (result.get() == ButtonType.OK)) {
                 Controller.deleteEmployee(employee);
-                lvwEmployees.getItems().setAll(Controller.getEmployees());
-                this.updateControls();
+                employeesListView.getItems().setAll(Controller.getEmployees());
+                this.updateControls(employeesListView.getSelectionModel().getSelectedItem());
             }
         }
-
     }
 
-    // -------------------------------------------------------------------------
-
-    private void selectedEmployeeChanged() {
-        this.updateControls();
+    private void selectedEmployeeChanged(Employee newEmployee) {
+        this.updateControls(newEmployee);
     }
 
-    public void updateControls() {
-        Employee employee = lvwEmployees.getSelectionModel().getSelectedItem();
+    public void updateControls(Employee employee) {
         if (employee != null) {
-            txfName.setText(employee.getName());
-            txfWage.setText("kr " + employee.getWage());
+            nameTextField.setText(employee.getName());
+            wageTextField.setText("kr " + employee.getWage());
             if (employee.getCompany() != null) {
-                txfCompany.setText("" + employee.getCompany());
-                txfSalary.setText("kr " + employee.weeklySalary());
+                companyTextField.setText("" + employee.getCompany());
+                salaryTextField.setText("kr " + employee.weeklySalary());
             } else {
-                txfCompany.clear();
-                txfSalary.clear();
+                companyTextField.clear();
+                salaryTextField.clear();
             }
         } else {
-            txfName.clear();
-            txfWage.clear();
-            txfCompany.clear();
-            txfSalary.clear();
+            nameTextField.clear();
+            wageTextField.clear();
+            companyTextField.clear();
+            salaryTextField.clear();
         }
     }
 }

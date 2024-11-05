@@ -13,14 +13,14 @@ public class App {
      * Initializes the storage with some objects.
      */
     public static void initStorage() {
-        Company c1 = Controller.createCompany("IBM", 37);
-        Company c2 = Controller.createCompany("AMD", 40);
-        Controller.createCompany("SLED", 45);
-        Controller.createCompany("Vector", 32);
+        Company ibm = Controller.createCompany("IBM", 37);
+        Company amd = Controller.createCompany("AMD", 40);
+        Controller.createCompany("NVIDIA", 45);
+        Controller.createCompany("GOOGLE", 32);
 
-        Controller.createEmployee("Bob Dole", 210, c2);
-        Controller.createEmployee("Alice Schmidt", 250, c1);
-        Controller.createEmployee("George Down", 150, c2);
+        Controller.createEmployee("Bob Dole", 210, amd);
+        Controller.createEmployee("Alice Schmidt", 250, ibm);
+        Controller.createEmployee("George Down", 150, amd);
 
         Controller.createEmployee("Rita Uphill", 300);
     }

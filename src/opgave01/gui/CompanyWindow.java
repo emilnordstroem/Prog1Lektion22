@@ -15,6 +15,9 @@ import opgave01.application.model.Company;
 
 public class CompanyWindow extends Stage {
     private Company company;
+    private TextField nameTextField;
+    private TextField hoursTextField;
+    private Label errorLabel;
 
     public CompanyWindow(String title, Company company) {
         this.initStyle(StageStyle.UTILITY);
@@ -35,11 +38,6 @@ public class CompanyWindow extends Stage {
         this(title, null);
     }
 
-    // -------------------------------------------------------------------------
-
-    private TextField txfName;
-    private TextField txfHours;
-    private Label lblError;
 
     private void initContent(GridPane pane) {
         pane.setPadding(new Insets(10));
@@ -47,76 +45,71 @@ public class CompanyWindow extends Stage {
         pane.setVgap(10);
         pane.setGridLinesVisible(false);
 
-        Label lblName = new Label("Name");
-        pane.add(lblName, 0, 0);
+        pane.add(new Label("Name"), 0, 0);
 
-        txfName = new TextField();
-        pane.add(txfName, 0, 1);
-        txfName.setPrefWidth(200);
+        nameTextField = new TextField();
+        pane.add(nameTextField, 0, 1);
+        nameTextField.setPrefWidth(200);
 
-        Label lblHours = new Label("Weekly Hours");
-        pane.add(lblHours, 0, 2);
+        pane.add(new Label("Weekly Hours"), 0, 2);
 
-        txfHours = new TextField();
-        pane.add(txfHours, 0, 3);
+        hoursTextField = new TextField();
+        pane.add(hoursTextField, 0, 3);
 
-        Button btnCancel = new Button("Cancel");
-        pane.add(btnCancel, 0, 4);
-        GridPane.setHalignment(btnCancel, HPos.LEFT);
-        btnCancel.setOnAction(event -> this.cancelAction());
+        Button cancelButton = new Button("Cancel");
+        pane.add(cancelButton, 0, 4);
+        GridPane.setHalignment(cancelButton, HPos.LEFT);
+        cancelButton.setOnAction(event -> this.cancelAction());
 
-        Button btnOK = new Button("OK");
-        pane.add(btnOK, 0, 4);
-        GridPane.setHalignment(btnOK, HPos.RIGHT);
-        btnOK.setOnAction(event -> this.okAction());
+        Button okButton = new Button("OK");
+        pane.add(okButton, 0, 4);
+        GridPane.setHalignment(okButton, HPos.RIGHT);
+        okButton.setOnAction(event -> this.okAction());
 
-        lblError = new Label();
-        pane.add(lblError, 0, 5);
-        lblError.setStyle("-fx-text-fill: red");
+        errorLabel = new Label();
+        pane.add(errorLabel, 0, 5);
+        errorLabel.setStyle("-fx-text-fill: red");
 
         this.initControls();
     }
 
     private void initControls() {
         if (company != null) {
-            txfName.setText(company.getName());
-            txfHours.setText("" + company.getHours());
+            nameTextField.setText(company.getName());
+            hoursTextField.setText("" + company.getHours());
         } else {
-            txfName.clear();
-            txfHours.clear();
+            nameTextField.clear();
+            hoursTextField.clear();
         }
     }
-
-    // -------------------------------------------------------------------------
 
     private void cancelAction() {
         this.hide();
     }
 
     private void okAction() {
-        String name = txfName.getText().trim();
-        if (name.length() == 0) {
-            lblError.setText("Name is empty");
-        } else {
-            int hours = -1;
-            try {
-                hours = Integer.parseInt(txfHours.getText().trim());
-            } catch (NumberFormatException ex) {
-                // do nothing
-            }
-            if (hours < 0) {
-                lblError.setText("Hours is not a positive number");
-            } else {
-                // Call application.controller methods
-                if (company != null) {
-                    Controller.updateCompany(company, name, hours);
-                } else {
-                    Controller.createCompany(name, hours);
-                }
-
-                this.hide();
-            }
+        String name = nameTextField.getText().trim();
+        if (name.isEmpty()) {
+            errorLabel.setText("Name is empty");
+            return;
         }
+        int hours = -1;
+        try {
+            hours = Integer.parseInt(hoursTextField.getText().trim());
+        } catch (NumberFormatException ex) {
+            errorLabel.setText("Enter a valid number of hours");
+            return;
+        }
+        if (hours < 0) {
+            errorLabel.setText("Hours is not a positive number");
+            return;
+        }
+        // Call application.controller methods
+        if (company != null) {
+            Controller.updateCompany(company, name, hours);
+        } else {
+            Controller.createCompany(name, hours);
+        }
+        this.hide();
     }
-
 }

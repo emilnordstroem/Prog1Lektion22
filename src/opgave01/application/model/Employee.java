@@ -7,6 +7,11 @@ public class Employee {
     // link to company class (--> 0..1)
     private Company company;
 
+    /**
+     *
+     * @param name name of the employee
+     * @param wage hourly wage of the employee
+     */
     public Employee(String name, int wage) {
         this.name = name;
         this.wage = wage;
@@ -40,7 +45,7 @@ public class Employee {
     /**
      * Sets the company as this employees company, if they aren't connected
      *
-     * @param company
+     * @param company the new company of the employee
      */
     public void setCompany(Company company) {
         if (this.company != company) {
