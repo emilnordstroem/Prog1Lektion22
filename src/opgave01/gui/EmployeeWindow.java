@@ -19,6 +19,8 @@ public class EmployeeWindow extends Stage {
     private TextField wageTextField;
     private CheckBox addCompanyCheckBox;
     private ComboBox<Company> selectCompanyComboBox;
+    // Opgave 1 - Year of Employment
+    private TextField employmentYearTextField;
     private Label errorLabel;
 
     public EmployeeWindow(String title, Employee employee) {
@@ -42,15 +44,20 @@ public class EmployeeWindow extends Stage {
         pane.setHgap(10);
         pane.setVgap(10);
         pane.setGridLinesVisible(false);
+
         Label lblName = new Label("Name");
         pane.add(lblName, 0, 0);
+
         nameTextField = new TextField();
         pane.add(nameTextField, 0, 1);
         nameTextField.setPrefWidth(200);
+
         Label lblHours = new Label("Hourly Wage");
         pane.add(lblHours, 0, 2);
+
         wageTextField = new TextField();
         pane.add(wageTextField, 0, 3);
+
         addCompanyCheckBox = new CheckBox("Company");
         pane.add(addCompanyCheckBox, 0, 4);
         ChangeListener<Boolean> listener = (ov, oldValue, newValue) -> selectedCompanyChanged(newValue);
@@ -59,16 +66,24 @@ public class EmployeeWindow extends Stage {
         pane.add(selectCompanyComboBox, 0, 5);
         selectCompanyComboBox.getItems().addAll(Controller.getCompanies());
         selectCompanyComboBox.setDisable(true);
+
+        // Opgave 1 - Year of Employment
+        Label lblEmploymentYear = new Label("Year of Empoyment");
+        pane.add(lblEmploymentYear, 0, 6);
+        employmentYearTextField = new TextField();
+        pane.add(employmentYearTextField, 0, 7);
+        employmentYearTextField.setEditable(false);
+
         Button btnCancel = new Button("Cancel");
-        pane.add(btnCancel, 0, 6);
+        pane.add(btnCancel, 0, 8);
         GridPane.setHalignment(btnCancel, HPos.LEFT);
         btnCancel.setOnAction(event -> cancelAction());
         Button btnOK = new Button("OK");
-        pane.add(btnOK, 0, 6);
+        pane.add(btnOK, 0, 8);
         GridPane.setHalignment(btnOK, HPos.RIGHT);
         btnOK.setOnAction(event -> okAction());
         errorLabel = new Label();
-        pane.add(errorLabel, 0, 7);
+        pane.add(errorLabel, 0, 9);
         errorLabel.setStyle("-fx-text-fill: red");
         initControls();
     }
@@ -87,6 +102,7 @@ public class EmployeeWindow extends Stage {
             nameTextField.clear();
             wageTextField.clear();
             selectCompanyComboBox.getSelectionModel().select(0);
+            employmentYearTextField.clear();
         }
     }
 
@@ -96,6 +112,7 @@ public class EmployeeWindow extends Stage {
 
     private void okAction() {
         String name = nameTextField.getText().trim();
+        int employmentYear = Integer.parseInt(employmentYearTextField.getText().trim());
         if (name.isEmpty()) {
             errorLabel.setText("Name is empty");
             return;
@@ -124,7 +141,7 @@ public class EmployeeWindow extends Stage {
             }
         } else {
             if (companyIsSelected) {
-                Controller.createEmployee(name, wage, newCompany);
+                Controller.createEmployee(name, wage, employmentYear, newCompany);
             } else {
                 Controller.createEmployee(name, wage);
             }
@@ -134,5 +151,6 @@ public class EmployeeWindow extends Stage {
 
     private void selectedCompanyChanged(boolean checked) {
         selectCompanyComboBox.setDisable(!checked);
+        employmentYearTextField.setEditable(true);
     }
 }

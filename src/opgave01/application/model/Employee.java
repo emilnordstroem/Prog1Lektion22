@@ -4,6 +4,9 @@ public class Employee {
     private String name;
     private int wage; // hourly wage
 
+    // Opgave 1 Year of Employment
+    private int employmentYear;
+
     // link to company class (--> 0..1)
     private Company company;
 
@@ -31,6 +34,15 @@ public class Employee {
 
     public void setWage(int wage) {
         this.wage = wage;
+    }
+
+    // Opgave 1 Getter/Setter
+    public int getEmploymentYear() {
+        return employmentYear;
+    }
+
+    public void setEmploymentYear(int employmentYear) {
+        this.employmentYear = employmentYear;
     }
 
     @Override

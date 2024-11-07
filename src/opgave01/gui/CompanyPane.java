@@ -9,6 +9,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import opgave01.application.controller.Controller;
 import opgave01.application.model.Company;
+import opgave01.application.model.Customer;
 import opgave01.application.model.Employee;
 
 import java.util.Optional;
@@ -17,6 +18,7 @@ public class CompanyPane extends GridPane {
     private TextField nameTextField;
     private TextField hoursTextField;
     private TextArea employeesTextArea;
+    private TextArea customersTextArea;
     private ListView<Company> companyListView;
 
     public CompanyPane() {
@@ -61,8 +63,22 @@ public class CompanyPane extends GridPane {
         employeesTextArea.setPrefHeight(100);
         employeesTextArea.setEditable(false);
 
+        // -------------------------------------------------------------------------
+        // Opgave 2 - Customer class
+        Label customersLabel = new Label("Employees:");
+        this.add(customersLabel, 1, 4);
+        GridPane.setValignment(customersLabel, VPos.BASELINE);
+        customersLabel.setPadding(new Insets(4, 0, 4, 0));
+
+        customersTextArea = new TextArea();
+        this.add(customersTextArea, 2, 4);
+        customersTextArea.setPrefWidth(200);
+        customersTextArea.setPrefHeight(100);
+        customersTextArea.setEditable(false);
+        // -------------------------------------------------------------------------
+
         HBox hboxButtons = new HBox(40);
-        this.add(hboxButtons, 0, 4, 3, 1);
+        this.add(hboxButtons, 0, 5, 4, 1);
         hboxButtons.setPadding(new Insets(10, 0, 0, 0));
         hboxButtons.setAlignment(Pos.BASELINE_CENTER);
 
@@ -77,6 +93,11 @@ public class CompanyPane extends GridPane {
         Button deleteButton = new Button("Delete");
         hboxButtons.getChildren().add(deleteButton);
         deleteButton.setOnAction(event -> this.deleteAction());
+
+        // Opgave 3 - Customer class
+        Button createCustomerButton = new Button("Assign New Customer");
+        hboxButtons.getChildren().add(createCustomerButton);
+        createCustomerButton.setOnAction(event -> this.createCustomer());
 
         if (!companyListView.getItems().isEmpty()) {
             companyListView.getSelectionModel().select(0);
@@ -129,6 +150,15 @@ public class CompanyPane extends GridPane {
     }
 
     // -------------------------------------------------------------------------
+    // Opgave 3 - Create Customer
+    private void createCustomer(){
+        new CustomerWindow("Assign Customer").showAndWait();
+        companyListView.getItems().setAll(Controller.getCompanies());
+        int index = companyListView.getItems().size() - 1;
+        companyListView.getSelectionModel().select(index);
+    }
+
+    // -------------------------------------------------------------------------
 
     private void selectedCompanyChanged(Company newCompany) {
         this.updateControls(newCompany);
@@ -138,15 +168,25 @@ public class CompanyPane extends GridPane {
         if (company != null) {
             nameTextField.setText(company.getName());
             hoursTextField.setText("" + company.getHours());
-            StringBuilder stringBuilder = new StringBuilder();
+
+            StringBuilder stringBuilderEmployee = new StringBuilder();
             for (Employee emp : company.getEmployees()) {
-                stringBuilder.append(emp + "\n");
+                stringBuilderEmployee.append(emp + "\n");
             }
-            employeesTextArea.setText(stringBuilder.toString());
+            employeesTextArea.setText(stringBuilderEmployee.toString());
+
+            // Opgave 2 - Customer class
+            StringBuilder stringBuilderCustomer = new StringBuilder();
+            for (Customer customer : company.getCustomers()) {
+                stringBuilderCustomer.append(customer + "\n");
+            }
+            customersTextArea.setText(stringBuilderCustomer.toString());
+
         } else {
             nameTextField.clear();
             hoursTextField.clear();
             employeesTextArea.clear();
+            customersTextArea.clear();
         }
     }
 }

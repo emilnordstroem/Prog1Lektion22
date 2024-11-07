@@ -9,6 +9,9 @@ public class Company {
     // link to Employee class (--> 0..*)
     private final ArrayList<Employee> employees = new ArrayList<>();
 
+    // link to Customer class (--> 0..*)
+    private final ArrayList<Customer> customers = new ArrayList<>();
+
     /**
      *
      * @param name name of the company
@@ -90,5 +93,23 @@ public class Company {
         return total;
     }
 
+    // -----------------------------------------------------------------------------
+    // Opgave 2 - Customer class
+
+    public void addCustomer(Customer customer){
+        if(!customers.contains(customer)){
+            customers.add(customer);
+        }
+    }
+
+    public void removeCustomer(Customer customer){
+        if(customers.contains(customer)){
+            customers.remove(customer);
+        }
+    }
+
+    public ArrayList<Customer> getCustomers() {
+        return new ArrayList<>(customers);
+    }
 
 }

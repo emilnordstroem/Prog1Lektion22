@@ -2,6 +2,7 @@ package opgave01.application.controller;
 
 
 import opgave01.application.model.Company;
+import opgave01.application.model.Customer;
 import opgave01.application.model.Employee;
 import opgave01.storage.Storage;
 
@@ -64,8 +65,9 @@ public class Controller {
      * Creates a new employee.<br />
      * Requires: wage >= 0, company!=null.
      */
-    public static Employee createEmployee(String name, int wage, Company company) {
+    public static Employee createEmployee(String name, int wage, int employmentYear, Company company) {
         Employee employee = createEmployee(name, wage);
+        employee.setEmploymentYear(employmentYear); // set year of employment
         company.addEmployee(employee);
         return employee;
     }
@@ -116,8 +118,26 @@ public class Controller {
     }
 
     // -------------------------------------------------------------------------
+    // Opgave 2 - Customer class
 
+    public static Customer createCustomer(String pronouns, String fullName){
+        Customer customer = new Customer(pronouns, fullName);
+        Storage.addCustomer(customer);
+        return customer;
+    }
 
+    public static void addCustomerToCompany(Customer customer, Company company){
+        company.addCustomer(customer);
+    }
+
+    public static void removeCustomerToCompany(Customer customer, Company company){
+        company.removeCustomer(customer);
+    }
+
+    public static void updateCustomer(Customer customer, String pronouns, String fullName) {
+        customer.setPronouns(pronouns);
+        customer.setFullName(fullName);
+    }
 
 }
 
