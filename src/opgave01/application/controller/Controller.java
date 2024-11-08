@@ -126,6 +126,10 @@ public class Controller {
         return customer;
     }
 
+    public static ArrayList<Customer> getCustomers(){
+        return Storage.getCustomers();
+    }
+
     public static void addCustomerToCompany(Customer customer, Company company){
         company.addCustomer(customer);
     }

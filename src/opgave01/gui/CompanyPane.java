@@ -65,7 +65,7 @@ public class CompanyPane extends GridPane {
 
         // -------------------------------------------------------------------------
         // Opgave 2 - Customer class
-        Label customersLabel = new Label("Employees:");
+        Label customersLabel = new Label("Customers:");
         this.add(customersLabel, 1, 4);
         GridPane.setValignment(customersLabel, VPos.BASELINE);
         customersLabel.setPadding(new Insets(4, 0, 4, 0));
@@ -171,14 +171,18 @@ public class CompanyPane extends GridPane {
 
             StringBuilder stringBuilderEmployee = new StringBuilder();
             for (Employee emp : company.getEmployees()) {
-                stringBuilderEmployee.append(emp + "\n");
+                if(emp != null){
+                    stringBuilderEmployee.append(emp + "\n");
+                }
             }
             employeesTextArea.setText(stringBuilderEmployee.toString());
 
             // Opgave 2 - Customer class
             StringBuilder stringBuilderCustomer = new StringBuilder();
             for (Customer customer : company.getCustomers()) {
-                stringBuilderCustomer.append(customer + "\n");
+                if(customer != null){
+                    stringBuilderCustomer.append(customer + "\n");
+                }
             }
             customersTextArea.setText(stringBuilderCustomer.toString());
 
